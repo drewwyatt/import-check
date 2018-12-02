@@ -440,7 +440,7 @@
   dependencies:
     "@types/node" "*"
 
-"@types/glob@*":
+"@types/glob@*", "@types/glob@^7.1.1":
   version "7.1.1"
   resolved "https://registry.yarnpkg.com/@types/glob/-/glob-7.1.1.tgz#aa59a1c6e3fbc421e07ccd31a944c30eba521575"
   integrity sha512-1Bh06cbWJUHMC97acuD6UMG29nMt0Aqz1vF3guLfG+kHHJhy3AyohZFFxYk2f7Q1SQIrNwvncxAE0N/9s70F2w==
@@ -2286,6 +2286,11 @@ globby@^7.1.1:
     ignore "^3.3.5"
     pify "^3.0.0"
     slash "^1.0.0"
+
+glon@^1.0.0:
+  version "1.0.0"
+  resolved "https://registry.yarnpkg.com/glon/-/glon-1.0.0.tgz#9832feb441f4933cbcf5d9aa793f2b41fb11cef8"
+  integrity sha512-qYj0oLhCJsKm/OwNjCnuOzdhNgpmVC1SXp3WbUmhA8MRejzBGCjUXWaDr9plEievwyTH8N6Zn0ay1n06hMdhzQ==
 
 got@^5.0.0:
   version "5.7.1"
