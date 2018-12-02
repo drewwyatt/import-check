@@ -1,5 +1,5 @@
 import { CommanderStatic } from 'commander';
-import { any, compose, either, forEach, not, propOr, propEq } from 'ramda';
+import { any, compose, either, forEach, not, propEq, propOr } from 'ramda';
 
 const args = process.argv.slice(2);
 
@@ -13,8 +13,8 @@ const matchesAlias = propEq(
   args[0],
 );
 
-type Program = CommanderStatic & { commands?: Commands };
-type Commands = { _alias: string; _name: string; }[];
+type Program = CommanderStatic & { readonly commands?: Commands };
+type Commands = ReadonlyArray<{ readonly _alias: string; readonly _name: string; }>;
 export const isUnknownCommand = compose<Program, Commands, boolean, boolean>(
   not,
   any(either(matchesName, matchesAlias)),
@@ -25,8 +25,9 @@ export const noArgsSpecified = !args.length;
 
 const logEach = forEach(x => console.log(x));
 
-export const printOutput = (func: (...args: any[]) => Promise<any>) => (...args: any[]): void => {
-  func(...args)
+// tslint:disable
+export const printOutput = (func: (...anyArgs: any[]) => Promise<any>) => (...funcArgs: any[]): void => {
+  func(...funcArgs)
     .then(x => {
       Array.isArray(x)
         ? logEach(x)
@@ -39,3 +40,4 @@ export const printOutput = (func: (...args: any[]) => Promise<any>) => (...args:
       process.exit(1);
     });
 };
+// tslint:enable
