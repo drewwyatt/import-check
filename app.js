@@ -1,36 +1,26 @@
-const fs = require('fs');
-const glob = require('glob');
-const R = require('ramda');
+const program = require('commander');
+const package = require('./package.json');
+const { directory } = require('./actions')
+const { isUnknownCommand, noArgsSpecified } = require('./utils');
 
-const IMPORT_REGEX = /import (?:\*.*|{[^}]*}|\w+)?(?: from )?'((?:\w|@|\/|\.)+)';/gm
-const pattern = '../jupiter/packages/@members/class-detail/**.ts?(x)';
+program
+  .name(package.name)
+  .version(package.version)
+  .description(package.description);
 
-const getMatches = string => {
-  let matches = [];
-  let match;
-  while (match = IMPORT_REGEX.exec(string)) {
-    matches.push(match[1]);
+program
+  .command('directory <directory>')
+  .alias('dir')
+  .description('list all imports in ts/tsx files in a given directory.')
+  .action(directory);
+
+program.parse(process.argv);
+
+// fallback
+const unrecognizedCommand = isUnknownCommand(program);
+if (noArgsSpecified || unrecognizedCommand) {
+  if (unrecognizedCommand) {
+    console.log('Unrecognized command');
   }
-  return matches;
-}
-
-const getFilePathsForPattern = pat => new Promise((res, rej) => glob(pat, null, (err, files) =>
-  err ? rej(err) : res(files)
-));
-
-const getFileForPath = path => new Promise((res, rej) => fs.readFile(path, 'utf8', (err, file) => err ? rej(err) : res(file)));
-const getFilesForPaths = paths => Promise.all(paths.map(p => getFileForPath(p)));
-const getMatchesForFile = file => getMatches(file);
-const getMatchesForFiles = files => Promise.resolve(files.map(getMatchesForFile));
-const flatten = arr => Promise.resolve(R.flatten(arr));
-const stripRelative = arr => Promise.resolve(arr.filter(a => a[0] !== '.'));
-const uniq = arr => Promise.resolve(R.uniq(arr));
-
-getFilePathsForPattern(pattern)
-  .then(getFilesForPaths)
-  .then(getMatchesForFiles)
-  .then(flatten)
-  .then(stripRelative)
-  .then(uniq)
-  .then(d => console.log(d))
-  .catch(e => console.error(e));
+  program.help()
+};
