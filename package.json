@@ -1,6 +1,6 @@
 {
   "name": "import-check",
-  "description": "List all packages used in a given directory",
+  "description": "List and validate dependencies",
   "version": "0.1.0",
   "main": "app.js",
   "license": "MIT",
