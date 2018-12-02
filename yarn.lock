@@ -2287,11 +2287,6 @@ globby@^7.1.1:
     pify "^3.0.0"
     slash "^1.0.0"
 
-glon@^1.0.0:
-  version "1.0.0"
-  resolved "https://registry.yarnpkg.com/glon/-/glon-1.0.0.tgz#9832feb441f4933cbcf5d9aa793f2b41fb11cef8"
-  integrity sha512-qYj0oLhCJsKm/OwNjCnuOzdhNgpmVC1SXp3WbUmhA8MRejzBGCjUXWaDr9plEievwyTH8N6Zn0ay1n06hMdhzQ==
-
 got@^5.0.0:
   version "5.7.1"
   resolved "https://registry.yarnpkg.com/got/-/got-5.7.1.tgz#5f81635a61e4a6589f180569ea4e381680a51f35"
