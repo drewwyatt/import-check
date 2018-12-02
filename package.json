@@ -2,7 +2,7 @@
   "name": "import-check",
   "description": "List and validate dependencies",
   "version": "0.1.0",
-  "main": "app.js",
+  "main": "./src/app.js",
   "license": "MIT",
   "repository": {
     "type": "git",
