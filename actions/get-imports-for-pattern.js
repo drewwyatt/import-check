@@ -14,7 +14,7 @@ const getMatches = string => {
 };
 
 const getFilePathsForPattern = pat => new Promise((res, rej) => glob(pat, null, (err, files) =>
-  err ? rej(err) : res(files)
+  err || !files.length ? rej(err || 'No files found for pattern') : res(files)
 ));
 
 const getFileForPath = path => new Promise((res, rej) => fs.readFile(path, 'utf8', (err, file) => err ? rej(err) : res(file)));
@@ -24,14 +24,13 @@ const getMatchesForFiles = files => Promise.resolve(files.map(getMatchesForFile)
 const flatten = arr => Promise.resolve(R.flatten(arr));
 const stripRelative = arr => Promise.resolve(arr.filter(a => a[0] !== '.'));
 const uniq = arr => Promise.resolve(R.uniq(arr));
+const sort = arr => Promise.resolve(arr.sort())
 
-module.exports = pattern => {
+module.exports = pattern =>
   getFilePathsForPattern(pattern)
     .then(getFilesForPaths)
     .then(getMatchesForFiles)
     .then(flatten)
     .then(stripRelative)
     .then(uniq)
-    .then(d => console.log(d))
-    .catch(e => console.error(e));
-};
+    .then(sort);
