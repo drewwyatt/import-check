@@ -1,12 +1,11 @@
-import * as program from 'commander';
-import pkg from '../package.json';
+#!/usr/bin/env node
+import program from 'commander';
 import { list } from './actions';
 import { isUnknownCommand, noArgsSpecified } from './utils';
 
 program
-  .name(pkg.name)
-  .version(pkg.version)
-  .description(pkg.description);
+  .name('import-check')
+  .version('0.1.0');
 
 program
   .command('list <directory>')
