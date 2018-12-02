@@ -1,6 +1,6 @@
 const program = require('commander');
 const package = require('./package.json');
-const { directory } = require('./actions')
+const { list } = require('./actions')
 const { isUnknownCommand, noArgsSpecified } = require('./utils');
 
 program
@@ -9,10 +9,10 @@ program
   .description(package.description);
 
 program
-  .command('directory <directory>')
-  .alias('dir')
+  .command('list <directory>')
+  .alias('l')
   .description('list all imports in ts/tsx files in a given directory.')
-  .action(directory);
+  .action(list);
 
 program.parse(process.argv);
 
