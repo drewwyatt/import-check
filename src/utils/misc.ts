@@ -22,6 +22,8 @@ export const isUnknownCommand = compose<Program, Commands, boolean, boolean>(
 export const noArgsSpecified = !args.length;
 
 const logEach = forEach(x => console.log(x));
+const log = (msg: any) =>
+  Array.isArray(msg) ? logEach(msg) : console.log(msg);
 
 // tslint:disable
 export const printOutput = (func: (...anyArgs: any[]) => Promise<any>) => (
@@ -29,12 +31,11 @@ export const printOutput = (func: (...anyArgs: any[]) => Promise<any>) => (
 ): void => {
   func(...funcArgs)
     .then(x => {
-      Array.isArray(x) ? logEach(x) : console.log(x);
-
+      log(x);
       process.exit(0);
     })
     .catch(e => {
-      console.log(e);
+      log(e);
       process.exit(1);
     });
 };

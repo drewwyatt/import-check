@@ -1,6 +1,6 @@
-import { readFile } from 'fs';
 import glob from 'glob';
 import * as R from 'ramda';
+import { getFilesForPaths } from '../utils/fs';
 
 const IMPORT_REGEX = /import (?:\*.*|{[^}]*}|\w+)?(?: from )?'((?:\w|@|\/|\.)+)';/gm;
 
@@ -24,14 +24,6 @@ const getFilePathsForPattern = (pat: string) =>
     ),
   );
 
-const getFileForPath = (path: string) =>
-  new Promise<string>((res, rej) =>
-    readFile(path, 'utf8', (err, file) => (err ? rej(err) : res(file))),
-  );
-
-const getFilesForPaths = (paths: ReadonlyArray<string>) =>
-  Promise.all<string>(paths.map(p => getFileForPath(p)));
-
 const getMatchesForFile = (file: string) => getMatches(file);
 
 const getMatchesForFiles = (files: ReadonlyArray<string>) =>
@@ -48,7 +40,7 @@ const uniq = (arr: ReadonlyArray<string>) => Promise.resolve(R.uniq(arr));
 const sort = (arr: ReadonlyArray<string>) =>
   Promise.resolve(R.sort((a: string, b: string) => a.localeCompare(b), arr));
 
-export default (pattern: string) =>
+export default (pattern: string): Promise<ReadonlyArray<string>> =>
   getFilePathsForPattern(pattern)
     .then(getFilesForPaths)
     .then(getMatchesForFiles)
