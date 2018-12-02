@@ -1,15 +1,11 @@
-const { compose } = require('ramda');
-const { printOutput } = require('../utils');
+import { compose } from 'ramda';
+import { printOutput } from '../utils';
 
-const toPattern = directory => (
+const toPattern = (directory: string) => (
   [directory, '**', '*.ts?(x)'].join('/')
 );
 
-const list = compose(
+export const list = compose(
   printOutput(require('./get-imports-for-pattern')),
   toPattern,
 );
-
-module.exports = {
-  list,
-};

@@ -1,4 +1,5 @@
-const { any, compose, either, forEach, not, prop, propEq } = require('ramda');
+import { CommanderStatic } from 'commander';
+import { any, compose, either, forEach, not, propOr, propEq } from 'ramda';
 
 const args = process.argv.slice(2);
 
@@ -12,17 +13,19 @@ const matchesAlias = propEq(
   args[0],
 );
 
-const isUnknownCommand = compose(
+type Program = CommanderStatic & { commands?: Commands };
+type Commands = { _alias: string; _name: string; }[];
+export const isUnknownCommand = compose<Program, Commands, boolean, boolean>(
   not,
   any(either(matchesName, matchesAlias)),
-  prop('commands'),
+  propOr([], 'commands'),
 );
 
-const noArgsSpecified = !args.length;
+export const noArgsSpecified = !args.length;
 
 const logEach = forEach(x => console.log(x));
 
-const printOutput = func => (...args) => {
+export const printOutput = (func: (...args: any[]) => Promise<any>) => (...args: any[]): void => {
   func(...args)
     .then(x => {
       Array.isArray(x)
@@ -35,10 +38,4 @@ const printOutput = func => (...args) => {
       console.log(e);
       process.exit(1);
     });
-};
-
-module.exports = {
-  isUnknownCommand,
-  noArgsSpecified,
-  printOutput,
 };

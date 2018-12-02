@@ -1,12 +1,12 @@
-const program = require('commander');
-const package = require('../package.json');
-const { list } = require('./actions')
-const { isUnknownCommand, noArgsSpecified } = require('./utils');
+import * as program from 'commander';
+import pkg from '../package.json';
+import { list } from './actions';
+import { isUnknownCommand, noArgsSpecified } from './utils';
 
 program
-  .name(package.name)
-  .version(package.version)
-  .description(package.description);
+  .name(pkg.name)
+  .version(pkg.version)
+  .description(pkg.description);
 
 program
   .command('list <directory>')
