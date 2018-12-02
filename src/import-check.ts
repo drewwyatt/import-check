@@ -3,9 +3,7 @@ import program from 'commander';
 import { list } from './actions';
 import { isUnknownCommand, noArgsSpecified } from './utils';
 
-program
-  .name('import-check')
-  .version('0.1.0');
+program.name('import-check').version('0.1.0');
 
 program
   .command('list <directory>')
@@ -21,5 +19,5 @@ if (noArgsSpecified || unrecognizedCommand) {
   if (unrecognizedCommand) {
     console.log('Unrecognized command');
   }
-  program.help()
-};
+  program.help();
+}
