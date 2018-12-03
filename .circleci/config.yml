@@ -42,6 +42,14 @@ jobs:
       - run: yarn test
       - run: npx nyc report --reporter=lcov | npx codecov
 
+  build:
+    <<: *build_config
+    steps:
+      - *attach_workspace
+      - run yarn build
+      - store_artifacts:
+        path: build
+
   danger_comments:
     <<: *build_config
     steps:
@@ -56,16 +64,6 @@ workflows:
 
   build:
     jobs:
-      - create_workspace:
-          filters:
-            branches:
-              ignore: master
-      - test:
-          requires:
-            - create_workspace
-  test_pull_request:
-    jobs:
       - create_workspace
-      - danger_comments:
-          requires:
-            - create_workspace
+      - build
+
