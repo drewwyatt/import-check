@@ -1,46 +1,75 @@
 # https://circleci.com/docs/2.0/language-javascript/
 version: 2
+
+references:
+  import_check_root: &import_check_root
+    /home/circleci/import-check
+
+  yarn_cache_key: &yarn_cache_key
+    v1-yarn-{{ checksum "yarn.lock" }}
+
+  build_config: &build_config
+    docker:
+      - image: circleci/node:10.12.0
+    working_directory: *import_check_root
+
+  attach_workspace: &attach_workspace
+    attach_workspace:
+      at: *import_check_root
+
 jobs:
-  'node-10':
-    docker:
-      - image: circleci/node:10
-    working_directory: ~/typescript-starter
-    steps:
-      - checkout
-      # Download and cache dependencies
-      - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            # fallback to using the latest cache if no exact match is found
-            - v1-dependencies-
-      - run: yarn install
-      - save_cache:
-          paths:
-            - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
-      - run: yarn test
-      - run: npx nyc report --reporter=lcov | npx codecov
-  'node-latest':
-    docker:
-      - image: circleci/node:latest
-    working_directory: ~/typescript-starter
+  create_workspace:
+    <<: *build_config
     steps:
       - checkout
       - restore_cache:
-          keys:
-            - v1-dependencies-{{ checksum "package.json" }}
-            - v1-dependencies-
-      - run: yarn install
+          key: *yarn_cache_key
+      - run:
+          name: Install Dependencies
+          command: yarn
       - save_cache:
+          key: *yarn_cache_key
           paths:
             - node_modules
-          key: v1-dependencies-{{ checksum "package.json" }}
+      - persist_to_workspace:
+          root: *import_check_root
+          paths:
+            - .
+  test:
+    <<: *build_config
+    steps:
+      - *attach_workspace
       - run: yarn test
       - run: npx nyc report --reporter=lcov | npx codecov
+
+  danger_comments:
+    <<: *build_config
+    steps:
+      - *attach_workspace
+      - run:
+          name: Danger Comments
+          command: yarn danger ci
 
 workflows:
   version: 2
   build:
     jobs:
-      - 'node-10'
-      - 'node-latest'
+      - create_workspace:
+          filters:
+            branches:
+              ignore: master
+      - test:
+          requires:
+            - create_workspace
+  test_pull_request:
+    jobs:
+      - create_workspace:
+          filters:
+            branches:
+              ignore: master
+      - test:
+          requires:
+            - create_workspace
+      - danger_comments:
+          requires:
+            - create_workspace
