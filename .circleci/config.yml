@@ -65,7 +65,7 @@ workflows:
             - create_workspace
   test_pull_request:
     jobs:
-      - create_workspace:
+      - create_workspace
       - test:
           requires:
             - create_workspace
