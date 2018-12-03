@@ -1,4 +1,4 @@
-# https://circleci.com/docs/2.0/language-javascript/
+---
 version: 2
 
 references:
@@ -51,7 +51,9 @@ jobs:
           command: yarn danger ci
 
 workflows:
+
   version: 2
+
   build:
     jobs:
       - create_workspace:
