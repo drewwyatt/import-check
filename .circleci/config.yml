@@ -66,9 +66,6 @@ workflows:
   test_pull_request:
     jobs:
       - create_workspace:
-          filters:
-            branches:
-              ignore: master
       - test:
           requires:
             - create_workspace
