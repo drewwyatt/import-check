@@ -1,7 +1,7 @@
 {
   "name": "import-check",
   "description": "List and validate dependencies",
-  "version": "0.1.0",
+  "version": "0.1.2",
   "main": "build/import-check.js",
   "typings": "build/index.d.ts",
   "repository": "https://github.com/drewwyatt/import-check",
