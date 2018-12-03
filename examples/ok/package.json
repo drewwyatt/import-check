@@ -1,0 +1,7 @@
+{
+  "name": "import-check-ok-example",
+  "dependencies": {
+    "@types/ramda": "^0.25.42",
+    "ramda": "^0.26.1"
+  }
+}
